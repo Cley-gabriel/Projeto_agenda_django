@@ -1,5 +1,5 @@
-from urllib import request
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from django.http import Http404
 from .models import Contato
 
 # Create your views here.
@@ -10,7 +10,12 @@ def index(request):
     })
 
 def ver_contato(resquest, contato_id):
-    contato = Contato.objects.get(id=contato_id)
-    return render (resquest, 'contatos/ver_contato.html', {
-        'contato': contato
-    })
+    # try:
+        # contato = Contato.objects.get(id=contato_id)
+        contato = get_object_or_404(Contato, id= contato_id)
+        return render (resquest, 'contatos/ver_contato.html', {
+            'contato': contato
+        })
+    # except Contato.DoesNotExist as e:
+    #     raise Http404("Essa pagina não existe")
+    
