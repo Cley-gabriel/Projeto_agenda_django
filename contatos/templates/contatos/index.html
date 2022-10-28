@@ -17,7 +17,6 @@
 
 
         {% for contato in contatos %}
-          {% if contato.mostrar %}
             <tr>
               <td>{{ contato.id }}</td>
               <td>
@@ -27,7 +26,6 @@
               <td>{{ contato.telefone }}</td>
               <td>{{ contato.categoria }}</td>
             </tr>
-          {%endif%}
         {% endfor %}
 
 
