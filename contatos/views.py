@@ -40,10 +40,7 @@ def busca (request):
     if termo is None or not termo:
         messages.add_message(request, messages.ERROR, 'Campo termo não pode ficar vazio')
         return redirect('index')
-    if termo:
-        messages.add_message(request, messages.SUCCESS, 'Contato encontrado')
         
-
     campos = Concat('nome', Value (' '), 'sobrenome')
 
     contatos = Contato.objects.annotate(

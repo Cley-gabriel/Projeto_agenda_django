@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block conteudo %}
+<h1 class="mt-3 mb-3">Cadastro</h1>
+
+<form method="POST" action="{% url 'register' %}">
+      {% include 'parciais/_messages.html' %}
+      {% csrf_token %}
+    <div class="form-group">
+      <label>Nome</label>
+      <input type="text" name="nome" class="form-control">
+      <label>Sobrenome</label>
+      <input type="text" name="sobrenome" class="form-control">
+      <label>Email</label>
+      <input type="email" name="email" class="form-control">
+      <label>Usuário</label>
+      <input type="text" name="usuario" class="form-control">
+      <label>Senha</label>
+      <input type="password" name="senha" class="form-control">
+      <label>Confirmar senha</label>
+      <input type="password" name="senha2" class="form-control">
+    </div>
+    <button type= "submit" class="btn btn-primary"> Cadastrar-me </button>
+  </form>
+{% endblock %}
