@@ -8,17 +8,17 @@
       {% csrf_token %}
     <div class="form-group">
       <label>Nome</label>
-      <input type="text" name="nome" class="form-control">
+      <input type="text" name="nome" value="{{request.POST.nome}}" class="form-control">
       <label>Sobrenome</label>
-      <input type="text" name="sobrenome" class="form-control">
+      <input type="text" name="sobrenome" value="{{request.POST.sobrenome}}" class="form-control">
       <label>Email</label>
-      <input type="email" name="email" class="form-control">
+      <input type="email" name="email" value="{{request.POST.email}}" class="form-control">
       <label>Usuário</label>
-      <input type="text" name="usuario" class="form-control">
+      <input type="text" name="usuario" value="{{request.POST.usuario}}" class="form-control">
       <label>Senha</label>
-      <input type="password" name="senha" class="form-control">
+      <input type="password" name="senha"  class="form-control">
       <label>Confirmar senha</label>
-      <input type="password" name="senha2" class="form-control">
+      <input type="password" name="senha2"  class="form-control">
     </div>
     <button type= "submit" class="btn btn-primary"> Cadastrar-me </button>
   </form>
