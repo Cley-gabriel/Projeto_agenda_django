@@ -1,14 +1,34 @@
 from django.shortcuts import render, redirect
-from django.contrib import messages
+from django.contrib import messages, auth
 from django.core.validators import validate_email 
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 
-# Create your views here.
+#Criação das views
 def login(request):
-    return render (request, 'accounts/login.html')
+    if request.method != 'POST':
+        return render (request, 'accounts/login.html')
+
+    usuario = request.POST.get('usuario')
+    senha = request.POST.get('senha')
+    
+    #checando se o usuario vai autenticar.
+    user = auth.authenticate(request, username=usuario, password=senha)
+
+    #usuario null
+    if not user:
+        messages.error(request, 'Usuário ou senha inválida')
+        return render (request, 'accounts/login.html')
+    #usuario logado
+    else:
+        auth.login(request, user)
+        messages.success(request, 'Login efetuado com sucesso.')
+        return redirect('dashboard')
+
 
 def logout(request):
-    return render (request, 'accounts/logout.html')
+    auth.logout(request)
+    return redirect('dashboard')
 
 def register(request):
     if request.method != 'POST':
@@ -32,7 +52,7 @@ def register(request):
         messages.error(request, 'Email inválido.')
         return render (request, 'accounts/register.html')
 
-    #validação de senha
+    #validação de senha.
     if len(senha) < 6:
         messages.error(request, 'Senha precisa ter mais de 5 caracteres.')
         return render (request, 'accounts/register.html')
@@ -62,6 +82,6 @@ def register(request):
     return redirect('login')
 
     
-
+@login_required(redirect_field_name='login')
 def dashboard(request):
     return render (request, 'accounts/dashboard.html')
