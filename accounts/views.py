@@ -3,6 +3,8 @@ from django.contrib import messages, auth
 from django.core.validators import validate_email 
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from .models import FormContato
+from contatos.models import Contato
 
 #Criação das views
 def login(request):
@@ -84,4 +86,34 @@ def register(request):
     
 @login_required(redirect_field_name='login')
 def dashboard(request):
-    return render (request, 'accounts/dashboard.html')
+
+    telefone = request.POST.get('telefone')
+
+    if request.method != 'POST':
+        form = FormContato()
+        return render (request, 'accounts/dashboard.html', {'form': form})
+
+    form = FormContato(request.POST, request.FILES)
+    
+
+    if not form.is_valid():
+        messages.error(request, 'Error ao enviar o formulário')
+        form = FormContato(request.POST)
+        return render (request, 'accounts/dashboard.html', {'form': form})
+
+    descricao = request.POST.get('descricao')
+
+    if len(descricao) < 5:
+        messages.error(request, 'Descrição precisa ter mais de 5 caracteres.')
+        form = FormContato(request.POST)
+        return render (request, 'accounts/dashboard.html', {'form': form})
+        
+    #Verificando se o número já existe
+    if Contato.objects.filter(telefone = telefone).exists():
+        messages.error(request, f'Telefone {telefone} já cadastrado.')     
+        return render(request, 'accounts/dashboard.html', {'form': form})
+
+    form.save()
+    messages.success(request, f'Contato {request.POST.get("nome")} foi salvo com sucesso')
+    return redirect('dashboard')
+
