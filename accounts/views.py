@@ -88,6 +88,7 @@ def register(request):
 def dashboard(request):
 
     telefone = request.POST.get('telefone')
+    email = request.POST.get('email')
 
     if request.method != 'POST':
         form = FormContato()
@@ -103,15 +104,20 @@ def dashboard(request):
 
     descricao = request.POST.get('descricao')
 
-    if len(descricao) < 5:
-        messages.error(request, 'Descrição precisa ter mais de 5 caracteres.')
-        form = FormContato(request.POST)
-        return render (request, 'accounts/dashboard.html', {'form': form})
-        
     #Verificando se o número já existe
     if Contato.objects.filter(telefone = telefone).exists():
         messages.error(request, f'Telefone {telefone} já cadastrado.')     
         return render(request, 'accounts/dashboard.html', {'form': form})
+
+    #verificando se o email já existe
+    if Contato.objects.filter(email= email).exists():
+        messages.info(request, f'Este endereço de email já existe. Por favor informe outro endereço de email.')
+        return render(request, 'accounts/dashboard.html', {'form': form})
+
+    if len(descricao) < 5:
+        messages.error(request, 'Descrição precisa ter mais de 5 caracteres.')
+        form = FormContato(request.POST)
+        return render (request, 'accounts/dashboard.html', {'form': form})
 
     form.save()
     messages.success(request, f'Contato {request.POST.get("nome")} foi salvo com sucesso')
